@@ -16,7 +16,6 @@
 
 @implementation CalculatorViewController
 @synthesize display = _display;
-@synthesize history = _history;
 @synthesize brain = _brain;
 @synthesize userIsInTheMiddleOfEnteringANumber = _userIsInTheMiddleOfEnteringANumber;
 
@@ -29,32 +28,12 @@
     //NSLog(@"pressed digit %@",sender.currentTitle);
     
     if (self.userIsInTheMiddleOfEnteringANumber) {
-        if ([sender.currentTitle isEqualToString:@"."]) {
-            NSRange ranged = [self.display.text rangeOfString:@"."];
-            if (ranged.location == NSNotFound) {
-                self.display.text = [self.display.text stringByAppendingFormat:sender.currentTitle];    
-                self.history.text = [self.history.text stringByAppendingFormat:sender.currentTitle];
-            }
-        } else {
-            self.display.text = [self.display.text stringByAppendingFormat:sender.currentTitle];    
-            self.history.text = [self.history.text stringByAppendingFormat:sender.currentTitle];
-        }
-        
-        
+        self.display.text = [self.display.text stringByAppendingFormat:sender.currentTitle];
     } else {
-        if ([sender.currentTitle isEqualToString:@"0"])  {
-            // do nothing
-        } else if ([sender.currentTitle isEqualToString:@"."]) {
-            self.display.text = [@"0" stringByAppendingFormat:sender.currentTitle];
-            self.userIsInTheMiddleOfEnteringANumber = YES;    
-            self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
-        } else {
+        if (![sender.currentTitle isEqualToString:@"0"])  {
             self.display.text = sender.currentTitle;
             self.userIsInTheMiddleOfEnteringANumber = YES;
-            self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
         }
-        
-            
     }
 }
 
@@ -62,21 +41,12 @@
     //NSLog(@"pressed operation %@",sender.currentTitle);
     if (self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
     double result = [self.brain performOperation:sender.currentTitle];
-    self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
-    
-    if ([sender.currentTitle isEqualToString:@"C"]) {
-        self.history.text = @"";
-    }
     }
 
 - (IBAction)enterPressed {
     [self.brain pushOperand:[self.display.text doubleValue]];
     self.userIsInTheMiddleOfEnteringANumber = NO;
-}
-- (void)viewDidUnload {
-    [self setHistory:nil];
-    [super viewDidUnload];
 }
 @end

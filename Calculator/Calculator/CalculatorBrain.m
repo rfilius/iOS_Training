@@ -29,11 +29,9 @@
 }
 
 - (void) pushOperand:(double)operand {
-    [self.operandStack addObject:[NSNumber numberWithDouble:operand]];
-}
 
-- (void) clearOperandStack {
-    [self.operandStack removeAllObjects];
+    [self.operandStack addObject:[NSNumber numberWithDouble:operand]];
+        
 }
 
 - (double) performOperation:(NSString *)operation {
@@ -49,26 +47,11 @@
         result = [self popOperand]-subresult;
     }else if ([operation isEqualToString:@"/"]) {
         double subresult = [self popOperand];
-        if (subresult == 0) {
-            result = 0;
-        } else {
-            result = [self popOperand]/subresult;
-        }
-    }else if ([operation isEqualToString:@"sin"]) {
-        result = sin([self popOperand]);
-    }else if ([operation isEqualToString:@"cos"]) {
-        result = cos([self popOperand]);
-    }else if ([operation isEqualToString:@"π"]) {
-        result = M_PI;  //#define M_PI
-    }else if ([operation isEqualToString:@"√"]) {
-        result = sqrt([self popOperand]);
-    }else if ([operation isEqualToString:@"C"]) {
-        result = 0;
-        [self clearOperandStack];
-        
+        result = [self popOperand]/subresult;
     }
-
+    
     [self pushOperand:result];
+    
     return (result);
 }
 
