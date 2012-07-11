@@ -16,5 +16,6 @@
 - (IBAction)digitPressed:(UIButton *)sender;
 - (IBAction)operationPressed:(UIButton *)sender;
 - (IBAction)enterPressed;
+- (IBAction)oopsPressed;
 
 @end

@@ -65,6 +65,7 @@
     self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
+    self.history.text = [self.history.text stringByAppendingFormat:[@"=" stringByAppendingFormat:resultString]];
     
     if ([sender.currentTitle isEqualToString:@"C"]) {
         self.history.text = @"";
@@ -73,7 +74,18 @@
 
 - (IBAction)enterPressed {
     [self.brain pushOperand:[self.display.text doubleValue]];
+   // self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:self.display.text]];
     self.userIsInTheMiddleOfEnteringANumber = NO;
+}
+
+- (IBAction)oopsPressed {
+    if ([self.display.text length] > 0 && self.userIsInTheMiddleOfEnteringANumber) {
+        self.display.text = [self.display.text substringToIndex:[self.display.text length]-1];
+        if ([self.history.text length] > 0) {
+            self.history.text = [self.history.text substringToIndex:[self.history.text length]-1];
+        }
+    }
+    
 }
 - (void)viewDidUnload {
     [self setHistory:nil];
