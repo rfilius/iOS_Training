@@ -9,70 +9,88 @@
 #import "CalculatorBrain.h"
 
 @interface CalculatorBrain ()
-@property (strong, nonatomic) NSMutableArray *operandStack;
+@property (strong, nonatomic) NSMutableArray *programStack;
 @end
 
 @implementation CalculatorBrain
-@synthesize operandStack = _operandStack;
+@synthesize programStack = _programStack;
 
-- (NSMutableArray*)operandStack {
+- (NSMutableArray*)programStack {
 
-    if (_operandStack == nil) _operandStack = [[NSMutableArray alloc] init];
-    return _operandStack;
+    if (_programStack == nil) _programStack = [[NSMutableArray alloc] init];
+    return _programStack;
     
 }
 
-- (double) popOperand {
-    NSNumber *operandObject = [self.operandStack lastObject];
-    if (operandObject) [self.operandStack removeLastObject];
-    return [operandObject doubleValue];
-}
-
 - (void) pushOperand:(double)operand {
-    [self.operandStack addObject:[NSNumber numberWithDouble:operand]];
+    [self.programStack addObject:[NSNumber numberWithDouble:operand]];
 }
 
-- (void) clearOperandStack {
-    [self.operandStack removeAllObjects];
+-(id)program {
+    return [self.programStack copy];
+}
+
++(double)runProgram:(id)program {
+    NSMutableArray *stack;
+    if ([program isKindOfClass:[NSArray class]]) {
+        stack = [program mutableCopy];
+    }
+    return [self popOperandOffStack:stack];
+}
+
++(NSString *)descriptionOfProgram:(id)program {
+    return @"jaja";
+}
+
++(double)popOperandOffStack:(NSMutableArray *)stack {
+    double result = 0;
+
+    id topOfStack = [stack lastObject];
+    if (topOfStack) [stack removeLastObject];
+    
+    if ([topOfStack isKindOfClass:[NSNumber class]]) {
+        return [topOfStack doubleValue];
+    } else if ([topOfStack isKindOfClass:[NSString class]]) {
+        NSString *operation = topOfStack;
+        if ([operation isEqualToString:@"+"]) {
+            result = [self popOperandOffStack:stack]+[self popOperandOffStack:stack];
+        } else if ([operation isEqualToString:@"*"]) {
+            result = [self popOperandOffStack:stack]*[self popOperandOffStack:stack];
+        }else if ([operation isEqualToString:@"-"]) {
+            double subresult = [self popOperandOffStack:stack];
+            result = [self popOperandOffStack:stack]-subresult;
+        }else if ([operation isEqualToString:@"/"]) {
+            double subresult = [self popOperandOffStack:stack];
+            if (subresult == 0) {
+                result = 0;
+            } else {
+                result = [self popOperandOffStack:stack]/subresult;
+            }
+        }else if ([operation isEqualToString:@"sin"]) {
+            result = sin([self popOperandOffStack:stack]);
+        }else if ([operation isEqualToString:@"cos"]) {
+            result = cos([self popOperandOffStack:stack]);
+        }else if ([operation isEqualToString:@"π"]) {
+            result = M_PI;  //#define M_PI
+        }else if ([operation isEqualToString:@"√"]) {
+            result = sqrt([self popOperandOffStack:stack]);
+        }else if ([operation isEqualToString:@"C"]) {
+            result = 0;
+            [stack removeAllObjects];
+            
+        }
+
+    }
+     
+    return result;
+    
 }
 
 - (double) performOperation:(NSString *)operation {
     
-    double result = 0;
-    
-    if ([operation isEqualToString:@"+"]) {
-        result = [self popOperand]+[self popOperand];
-    } else if ([operation isEqualToString:@"*"]) {
-        result = [self popOperand]*[self popOperand];
-    }else if ([operation isEqualToString:@"-"]) {
-        double subresult = [self popOperand];
-        result = [self popOperand]-subresult;
-    }else if ([operation isEqualToString:@"/"]) {
-        double subresult = [self popOperand];
-        if (subresult == 0) {
-            result = 0;
-        } else {
-            result = [self popOperand]/subresult;
-        }
-    }else if ([operation isEqualToString:@"sin"]) {
-        result = sin([self popOperand]);
-    }else if ([operation isEqualToString:@"cos"]) {
-        result = cos([self popOperand]);
-    }else if ([operation isEqualToString:@"π"]) {
-        result = M_PI;  //#define M_PI
-    }else if ([operation isEqualToString:@"√"]) {
-        result = sqrt([self popOperand]);
-    }else if ([operation isEqualToString:@"C"]) {
-        result = 0;
-        [self clearOperandStack];
-        
-    }
-
-    [self pushOperand:result];
-    return (result);
+    [self.programStack addObject:operation];
+    return [CalculatorBrain runProgram:self.program];
 }
-
-
 
 
 @end
