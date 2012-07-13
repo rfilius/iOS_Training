@@ -41,7 +41,7 @@
 + (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues {
 
     NSMutableArray *stack;
-    NSString variableReplaceValue;
+    NSString *variableReplaceValue;
     
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
