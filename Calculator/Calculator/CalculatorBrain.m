@@ -38,6 +38,62 @@
     return [self popOperandOffStack:stack];
 }
 
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues {
+
+    NSMutableArray *stack;
+    NSString variableReplaceValue;
+    
+    if ([program isKindOfClass:[NSArray class]]) {
+        stack = [program mutableCopy];
+        
+        /*
+         NSMutableArray method replaceObjectAtIndex:withObject: might be useful to you in this assignment. Note that you cannot call this method inside a for-in type of enumeration (since you don’t have the index in that case): you’d need a for loop that is iterating by index through the array.
+         */
+
+        // need to switch the variables over from variable to value in
+        // the stack
+
+        
+        int i;
+        for (i = 0; i < [stack count]; i++) {
+            id thing = [stack objectAtIndex:i];
+            
+        // cannot use normal loop cause i need the index 
+        //        for (id thing in stack) {
+
+            if ([thing isKindOfClass:[NSString class]]) {
+                //its a string, so lets see what it is. Ignore operations
+                if ([thing isEqualToString:@"+"] ||
+                    [thing isEqualToString:@"*"] ||
+                    [thing isEqualToString:@"-"] ||
+                    [thing isEqualToString:@"/"] ||
+                    [thing isEqualToString:@"cos"] ||
+                    [thing isEqualToString:@"sin"] ||
+                    [thing isEqualToString:@"π"] ||
+                    [thing isEqualToString:@"√"] ||
+                    [thing isEqualToString:@"C"] 
+                   ) {
+                   // ignore the operations
+                } else {
+                    // so we have a string that is not an operation. look 
+                    // it up in the dictionary and replace. If no find then
+                    // make it 0
+                    variableReplaceValue = [variableValues valueForKey:thing];
+                    
+                    // if the found delivers nil then make it 0;
+                    if (!variableReplaceValue) variableReplaceValue = 0;
+                    
+                    [stack replaceObjectAtIndex:i withObject:variableReplaceValue]; 
+                }
+            }
+        }
+        
+    }
+    
+    return [self popOperandOffStack:stack];
+    
+}
+
 +(NSString *)descriptionOfProgram:(id)program {
     return @"jaja";
 }
