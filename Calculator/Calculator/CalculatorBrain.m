@@ -30,6 +30,7 @@
     return [self.programStack copy];
 }
 
+
 +(double)runProgram:(id)program {
     NSMutableArray *stack;
     if ([program isKindOfClass:[NSArray class]]) {
@@ -129,12 +130,66 @@
         
     }
     
+    // is ie nou nil ? of niet ? volgens mij wel ..
     return [variableSet copy];
 
 }
 
++(NSString *)popDescriptionOffStack:(NSMutableArray *)stack {
+    NSString *result;
+    
+    id topOfStack = [stack lastObject];
+    if (topOfStack) [stack removeLastObject];
+    
+    if ([topOfStack isKindOfClass:[NSNumber class]]) {
+
+        result = [result stringByAppendingFormat:@"%g",[topOfStack doubleValue]];
+        
+    } else if ([topOfStack isKindOfClass:[NSString class]]) {
+        NSString *operation = topOfStack;
+        if ([operation isEqualToString:@"+"]) {
+            result = operation;
+        } else if ([operation isEqualToString:@"*"]) {
+            result = [@"(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@"*",[self popDescriptionOffStack:stack],@")"];
+                      
+        }else if ([operation isEqualToString:@"-"]) {
+            NSString *subresult = [self popDescriptionOffStack:stack];
+            result = [[self popDescriptionOffStack:stack] stringByAppendingFormat:@" - ", subresult];
+            
+        }else if ([operation isEqualToString:@"/"]) {
+            NSString *subresult = [self popDescriptionOffStack:stack];
+            result = [[self popDescriptionOffStack:stack] stringByAppendingFormat:@" / ", subresult];
+            
+        }else if ([operation isEqualToString:@"sin"]) {
+            result = [@"sin(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@")"];
+            
+        }else if ([operation isEqualToString:@"cos"]) {
+            result = [@"cos(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@")"];
+
+            
+        }else if ([operation isEqualToString:@"π"]) {
+            result = @"π";  //#define M_PI
+            
+        }else if ([operation isEqualToString:@"√"]) {
+            result = [@"sqrt(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@")"];            
+        }
+   
+    }
+    
+    NSLog(@"result: %@",result);
+    return result;
+    
+}
+
 +(NSString *)descriptionOfProgram:(id)program {
-    return @"jaja";
+
+    NSString *result;
+    if ([program isKindOfClass:[NSArray class]]) {
+        result = [self popDescriptionOffStack:program];
+    }
+    
+    return result;
+    
 }
 
 +(double)popOperandOffStack:(NSMutableArray *)stack {
