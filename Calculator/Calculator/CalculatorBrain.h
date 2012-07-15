@@ -12,6 +12,7 @@
 
 - (void) pushOperand:(double)operand;
 - (double) performOperation:(NSString *)operation;
+- (NSString *) getDescription;
 
 @property (readonly) id program;
 

@@ -12,10 +12,18 @@
 @property (weak, nonatomic) IBOutlet UILabel *display;
 @property (weak, nonatomic) IBOutlet UILabel *history;
 
-
 - (IBAction)digitPressed:(UIButton *)sender;
 - (IBAction)operationPressed:(UIButton *)sender;
 - (IBAction)enterPressed;
 - (IBAction)oopsPressed;
+
+- (IBAction)xPressed;
+- (IBAction)aPressed;
+- (IBAction)bPressed;
+- (IBAction)fooPressed;
+- (IBAction)test1Pressed;
+- (IBAction)test2Pressed;
+- (IBAction)test3Pressed;
+- (IBAction)test4Pressed;
 
 @end

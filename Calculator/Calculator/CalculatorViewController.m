@@ -33,11 +33,11 @@
             NSRange ranged = [self.display.text rangeOfString:@"."];
             if (ranged.location == NSNotFound) {
                 self.display.text = [self.display.text stringByAppendingFormat:sender.currentTitle];    
-                self.history.text = [self.history.text stringByAppendingFormat:sender.currentTitle];
+          //      self.history.text = [self.history.text stringByAppendingFormat:sender.currentTitle];
             }
         } else {
             self.display.text = [self.display.text stringByAppendingFormat:sender.currentTitle];    
-            self.history.text = [self.history.text stringByAppendingFormat:sender.currentTitle];
+          //  self.history.text = [self.history.text stringByAppendingFormat:sender.currentTitle];
         }
         
         
@@ -47,25 +47,54 @@
         } else if ([sender.currentTitle isEqualToString:@"."]) {
             self.display.text = [@"0" stringByAppendingFormat:sender.currentTitle];
             self.userIsInTheMiddleOfEnteringANumber = YES;    
-            self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
+     //       self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
         } else {
             self.display.text = sender.currentTitle;
             self.userIsInTheMiddleOfEnteringANumber = YES;
-            self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
+       //     self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
         }
         
             
     }
+    
+    self.history.text = [self.brain getDescription];
+
+- (IBAction)xPressed {
+}
+
+- (IBAction)aPressed {
+}
+
+- (IBAction)bPressed {
+}
+
+- (IBAction)fooPressed {
+}
+
+- (IBAction)test1Pressed {
+}
+
+- (IBAction)test2Pressed {
+}
+
+- (IBAction)test3Pressed {
+}
+
+- (IBAction)test4Pressed {
+}
+    
 }
 
 - (IBAction)operationPressed:(UIButton *)sender {
-    //NSLog(@"pressed operation %@",sender.currentTitle);
     if (self.userIsInTheMiddleOfEnteringANumber) [self enterPressed];
     double result = [self.brain performOperation:sender.currentTitle];
-    self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
+    //self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:sender.currentTitle]];
     NSString *resultString = [NSString stringWithFormat:@"%g", result];
     self.display.text = resultString;
-    self.history.text = [self.history.text stringByAppendingFormat:[@"=" stringByAppendingFormat:resultString]];
+    //self.history.text = [self.history.text stringByAppendingFormat:[@"=" stringByAppendingFormat:resultString]];
+    
+    self.history.text = [self.brain getDescription];
+
     
     if ([sender.currentTitle isEqualToString:@"C"]) {
         self.history.text = @"";
@@ -76,14 +105,17 @@
     [self.brain pushOperand:[self.display.text doubleValue]];
    // self.history.text = [self.history.text stringByAppendingFormat:[@" " stringByAppendingFormat:self.display.text]];
     self.userIsInTheMiddleOfEnteringANumber = NO;
+    
+    self.history.text = [self.brain getDescription];
+
 }
 
 - (IBAction)oopsPressed {
     if ([self.display.text length] > 0 && self.userIsInTheMiddleOfEnteringANumber) {
         self.display.text = [self.display.text substringToIndex:[self.display.text length]-1];
-        if ([self.history.text length] > 0) {
-            self.history.text = [self.history.text substringToIndex:[self.history.text length]-1];
-        }
+        //if ([self.history.text length] > 0) {
+        //    self.history.text = [self.history.text substringToIndex:[self.history.text length]-1];
+        //}
     }
     
 }

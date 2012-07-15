@@ -136,44 +136,50 @@
 }
 
 +(NSString *)popDescriptionOffStack:(NSMutableArray *)stack {
+    
     NSString *result;
     
-    id topOfStack = [stack lastObject];
-    if (topOfStack) [stack removeLastObject];
+    NSLog(@"stack = %@",stack);
     
-    if ([topOfStack isKindOfClass:[NSNumber class]]) {
-
-        result = [result stringByAppendingFormat:@"%g",[topOfStack doubleValue]];
+    if ([stack count] > 0) {
+    
+        id topOfStack = [stack lastObject];
+        if (topOfStack) [stack removeLastObject];
         
-    } else if ([topOfStack isKindOfClass:[NSString class]]) {
-        NSString *operation = topOfStack;
-        if ([operation isEqualToString:@"+"]) {
-            result = operation;
-        } else if ([operation isEqualToString:@"*"]) {
-            result = [@"(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@"*",[self popDescriptionOffStack:stack],@")"];
-                      
-        }else if ([operation isEqualToString:@"-"]) {
-            NSString *subresult = [self popDescriptionOffStack:stack];
-            result = [[self popDescriptionOffStack:stack] stringByAppendingFormat:@" - ", subresult];
+        if ([topOfStack isKindOfClass:[NSNumber class]]) {
+            result = [topOfStack stringValue];
+        } else if ([topOfStack isKindOfClass:[NSString class]]) {
+            NSString *operation = topOfStack;
             
-        }else if ([operation isEqualToString:@"/"]) {
-            NSString *subresult = [self popDescriptionOffStack:stack];
-            result = [[self popDescriptionOffStack:stack] stringByAppendingFormat:@" / ", subresult];
+            if ([operation isEqualToString:@"+"]) {
+                result = [@"(" stringByAppendingFormat:@"%@ %@ %@ %@",[self popDescriptionOffStack:stack],@"+",[self popDescriptionOffStack:stack],@")"];;
+            } else if ([operation isEqualToString:@"*"]) {
+                result = [@"(" stringByAppendingFormat:@"%@ %@ %@ %@",[self popDescriptionOffStack:stack],@"*",[self popDescriptionOffStack:stack],@")"];
+                
+            }else if ([operation isEqualToString:@"-"]) {
+                NSString *subresult = [self popDescriptionOffStack:stack];
+                result = [[self popDescriptionOffStack:stack] stringByAppendingFormat:@"%@ %@",@"-", subresult];
+                
+            }else if ([operation isEqualToString:@"/"]) {
+                NSString *subresult = [self popDescriptionOffStack:stack];
+                result = [[self popDescriptionOffStack:stack] stringByAppendingFormat:@"%@ %@",@"/", subresult];
+                
+            }else if ([operation isEqualToString:@"sin"]) {
+                result = [@"sin(" stringByAppendingFormat:@"%@ %@",[self popDescriptionOffStack:stack],@")"];
+                
+            }else if ([operation isEqualToString:@"cos"]) {
+                result = [@"cos(" stringByAppendingFormat:@"%@ %@",[self popDescriptionOffStack:stack],@")"];
+                
+                
+            }else if ([operation isEqualToString:@"π"]) {
+                result = @"π";  //#define M_PI
+                
+            }else if ([operation isEqualToString:@"√"]) {
+                result = [@"sqrt(" stringByAppendingFormat:@"%@ %@",[self popDescriptionOffStack:stack],@")"];            
+            }
             
-        }else if ([operation isEqualToString:@"sin"]) {
-            result = [@"sin(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@")"];
-            
-        }else if ([operation isEqualToString:@"cos"]) {
-            result = [@"cos(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@")"];
-
-            
-        }else if ([operation isEqualToString:@"π"]) {
-            result = @"π";  //#define M_PI
-            
-        }else if ([operation isEqualToString:@"√"]) {
-            result = [@"sqrt(" stringByAppendingFormat:[self popDescriptionOffStack:stack],@")"];            
         }
-   
+        
     }
     
     NSLog(@"result: %@",result);
@@ -185,7 +191,7 @@
 
     NSString *result;
     if ([program isKindOfClass:[NSArray class]]) {
-        result = [self popDescriptionOffStack:program];
+        result = [self popDescriptionOffStack:[program mutableCopy]];
     }
     
     return result;
@@ -226,8 +232,7 @@
             result = sqrt([self popOperandOffStack:stack]);
         }else if ([operation isEqualToString:@"C"]) {
             result = 0;
-            [stack removeAllObjects];
-            
+            [stack removeAllObjects];  
         }
 
     }
@@ -242,5 +247,8 @@
     return [CalculatorBrain runProgram:self.program];
 }
 
+- (NSString *) getDescription {
+    return [CalculatorBrain descriptionOfProgram:self.program];
+}
 
 @end
