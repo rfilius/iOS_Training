@@ -17,10 +17,7 @@
 - (IBAction)enterPressed;
 - (IBAction)oopsPressed;
 
-- (IBAction)xPressed;
-- (IBAction)aPressed;
-- (IBAction)bPressed;
-- (IBAction)fooPressed;
+
 - (IBAction)test1Pressed;
 - (IBAction)test2Pressed;
 - (IBAction)test3Pressed;

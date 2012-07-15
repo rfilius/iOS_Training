@@ -90,6 +90,24 @@
     
 }
 
++ (BOOL) isOperation:(NSString *)command {
+    if ([command isEqualToString:@"+"] ||
+        [command isEqualToString:@"*"] ||
+        [command isEqualToString:@"-"] ||
+        [command isEqualToString:@"/"] ||
+        [command isEqualToString:@"cos"] ||
+        [command isEqualToString:@"sin"] ||
+        [command isEqualToString:@"π"] ||
+        [command isEqualToString:@"√"] ||
+        [command isEqualToString:@"C"] 
+        ) { 
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
 + (NSSet *)variablesUsedInProgram:(id)program {
     
     NSMutableArray *stack;
