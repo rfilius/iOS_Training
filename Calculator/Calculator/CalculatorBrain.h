@@ -12,7 +12,9 @@
 
 - (void) pushOperand:(double)operand;
 - (double) performOperation:(NSString *)operation;
+- (double) performOperation:(NSString *)operation usingVariableValues:(NSDictionary *)variableValues;
 - (NSString *) getDescription;
+- (NSSet *) getVariables;
 
 @property (readonly) id program;
 

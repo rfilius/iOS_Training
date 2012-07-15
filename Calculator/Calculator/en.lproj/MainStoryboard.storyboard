@@ -477,6 +477,7 @@
                     <connections>
                         <outlet property="display" destination="5Us-VI-b3g" id="LQC-pb-pWd"/>
                         <outlet property="history" destination="A93-tX-rfg" id="xs1-qg-0N0"/>
+                        <outlet property="variableWatch" destination="mcM-vN-h6L" id="lWc-ZP-4MB"/>
                     </connections>
                 </viewController>
             </objects>
@@ -496,6 +497,7 @@
                 <relationship kind="action" name="test4Pressed"/>
                 <relationship kind="outlet" name="display" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="history" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="variableWatch" candidateClass="UILabel"/>
             </relationships>
         </class>
     </classes>

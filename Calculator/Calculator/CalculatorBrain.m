@@ -49,7 +49,6 @@
         
         // need to switch the variables over from variable to value in
         // the stack
-        
         int i;
         for (i = 0; i < [stack count]; i++) {
             id thing = [stack objectAtIndex:i];
@@ -59,16 +58,7 @@
 
             if ([thing isKindOfClass:[NSString class]]) {
                 //its a string, so lets see what it is. Ignore operations
-                if ([thing isEqualToString:@"+"] ||
-                    [thing isEqualToString:@"*"] ||
-                    [thing isEqualToString:@"-"] ||
-                    [thing isEqualToString:@"/"] ||
-                    [thing isEqualToString:@"cos"] ||
-                    [thing isEqualToString:@"sin"] ||
-                    [thing isEqualToString:@"π"] ||
-                    [thing isEqualToString:@"√"] ||
-                    [thing isEqualToString:@"C"] 
-                   ) {
+                if ([self isOperation:thing]) {
                    // ignore the operations
                 } else {
                     // so we have a string that is not an operation. look 
@@ -77,9 +67,11 @@
                     variableReplaceValue = [variableValues valueForKey:thing];
                     
                     // if the found delivers nil then make it 0;
-                    if (!variableReplaceValue) variableReplaceValue = 0;
-                    
-                    [stack replaceObjectAtIndex:i withObject:variableReplaceValue]; 
+                    if (variableReplaceValue == nil) {
+                        variableReplaceValue = 0;   
+                    } else {
+                        [stack replaceObjectAtIndex:i withObject:variableReplaceValue];
+                    }                    
                 }
             }
         }
@@ -111,53 +103,42 @@
 + (NSSet *)variablesUsedInProgram:(id)program {
     
     NSMutableArray *stack;
-    NSMutableSet *variableSet;
+    NSMutableSet *variableSet = [[NSMutableSet alloc] init];
     
     if ([program isKindOfClass:[NSArray class]]) {
         stack = [program mutableCopy];
         
-        // look for the variables in the stack
-        
+        // look for the variables in the stack        
         int i;
         for (i = 0; i < [stack count]; i++) {
             id thing = [stack objectAtIndex:i];
             
             // cannot use normal loop cause i need the index 
             //        for (id thing in stack) {
-            
             if ([thing isKindOfClass:[NSString class]]) {
                 //its a string, so lets see what it is. Ignore operations
-                if ([thing isEqualToString:@"+"] ||
-                    [thing isEqualToString:@"*"] ||
-                    [thing isEqualToString:@"-"] ||
-                    [thing isEqualToString:@"/"] ||
-                    [thing isEqualToString:@"cos"] ||
-                    [thing isEqualToString:@"sin"] ||
-                    [thing isEqualToString:@"π"] ||
-                    [thing isEqualToString:@"√"] ||
-                    [thing isEqualToString:@"C"] 
-                    ) {
+                if ([self isOperation:thing]) {
                     // ignore the operations
                 } else {
                     // so we have a string that is not an operation. so this 
                     // is a variable, add it to the set 
-                    [variableSet addObject:thing];
+                    [variableSet  addObject:thing];
                 }
             }
         }
         
     }
-    
-    // is ie nou nil ? of niet ? volgens mij wel ..
-    return [variableSet copy];
 
+    if ([variableSet count] == 0) variableSet = nil;
+    
+    return [variableSet copy];
 }
 
 +(NSString *)popDescriptionOffStack:(NSMutableArray *)stack {
     
     NSString *result;
     
-    NSLog(@"stack = %@",stack);
+   // NSLog(@"stack = %@",stack);
     
     if ([stack count] > 0) {
     
@@ -195,12 +176,15 @@
             }else if ([operation isEqualToString:@"√"]) {
                 result = [@"sqrt(" stringByAppendingFormat:@"%@ %@",[self popDescriptionOffStack:stack],@")"];            
             }
+            else {
+                result = operation;
+            }
             
         }
         
     }
     
-    NSLog(@"result: %@",result);
+ //   NSLog(@"result: %@",result);
     return result;
     
 }
@@ -260,13 +244,23 @@
 }
 
 - (double) performOperation:(NSString *)operation {
-    
     [self.programStack addObject:operation];
     return [CalculatorBrain runProgram:self.program];
+}
+
+
+- (double) performOperation:(NSString *)operation usingVariableValues:(NSDictionary *)variableValues {
+    [self.programStack addObject:operation];
+    return [CalculatorBrain runProgram:self.program usingVariableValues:variableValues];
 }
 
 - (NSString *) getDescription {
     return [CalculatorBrain descriptionOfProgram:self.program];
 }
+
+- (NSSet *) getVariables {
+    return [CalculatorBrain variablesUsedInProgram:self.program];
+}
+
 
 @end
