@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns:tns="http://xmlns.oracle.com/apps/xxgr/soaprovider/plsql/rest/xxgr_soap_journaalposten/" xmlns="http://wadl.dev.java.net/2009/02" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns1="http://xmlns.oracle.com/apps/xxgr/rest/journaalposten_v1.0/check_ebs_alive/" xmlns:tns2="http://xmlns.oracle.com/apps/xxgr/rest/journaalposten_v1.0/verwerken_journaalposten/" name="XXGR_SOAP_JOURNAALPOSTEN" targetNamespace="http://xmlns.oracle.com/apps/xxgr/soaprovider/plsql/rest/xxgr_soap_journaalposten/">
+<grammars>
+<include xmlns="http://www.w3.org/2001/XMLSchema" href="https://sdra01.sdr.rotterdam.nl:8002/webservices/rest/journaalposten_v1.0/?XSD=CHECK_EBS_ALIVE_SYNCH_TYPEDEF.xsd"/>
+<include xmlns="http://www.w3.org/2001/XMLSchema" href="https://sdra01.sdr.rotterdam.nl:8002/webservices/rest/journaalposten_v1.0/?XSD=VERWERKEN_JOURNAALPOSTEN_SYNCH_TYPEDEF.xsd"/>
+</grammars>
+<resources base="https://sdra01.sdr.rotterdam.nl:8002/webservices/rest/journaalposten_v1.0/">
+<resource path="check_ebs_alive/">
+<method id="CHECK_EBS_ALIVE" name="POST">
+<request>
+<representation mediaType="application/xml" type="CHECK_EBS_ALIVE_Input"/>
+<representation mediaType="application/json" type="CHECK_EBS_ALIVE_Input"/>
+</request>
+<response>
+<representation mediaType="application/xml" type="CHECK_EBS_ALIVE_Output"/>
+<representation mediaType="application/json" type="CHECK_EBS_ALIVE_Output"/>
+</response>
+</method>
+</resource>
+<resource path="verwerken_journaalposten/">
+<method id="VERWERKEN_JOURNAALPOSTEN" name="POST">
+<request>
+<representation mediaType="application/xml" type="VERWERKEN_JOURNAALPOSTEN_Input"/>
+<representation mediaType="application/json" type="VERWERKEN_JOURNAALPOSTEN_Input"/>
+</request>
+<response>
+<representation mediaType="application/xml" type="VERWERKEN_JOURNAALPOSTEN_Output"/>
+<representation mediaType="application/json" type="VERWERKEN_JOURNAALPOSTEN_Output"/>
+</response>
+</method>
+</resource>
+</resources>
+</application>
